@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Collaborative Document Editor</title>
+    <style>
+        #editor {
+            width: 80vw;
+            height: 60vh;
+            font-size: 1.2em;
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin: 20px auto;
+            display: block;
+            resize: vertical;
+        }
+    </style>
+</head>
+
+<body>
+    <h2 style="text-align:center;">Real-Time Collaborative Document Editor</h2>
+    <textarea id="editor" placeholder="Start typing..."></textarea>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script>
+        const socket = io(); // Connects to the backend server
+
+        const editor = document.getElementById('editor');
+
+        // Send changes to server
+        editor.addEventListener('input', () => {
+            socket.emit('edit', editor.value);
+        });
+
+        // Receive changes from server
+        socket.on('update', (text) => {
+            if (editor.value !== text) {
+                editor.value = text;
+            }
+        });
+    </script>
+</body>
+
+</html>
